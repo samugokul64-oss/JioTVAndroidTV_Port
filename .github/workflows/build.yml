@@ -13,7 +13,7 @@ jobs:
       - name: Generate Valid AndroidManifest
         run: |
           python3 -c '
-          ns = "http://" + "://android.com"
+          ns = "http://schemas." + "://android.com"
           xml = f"""<?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="{ns}">
               <uses-permission android:name="android.permission.INTERNET" />
