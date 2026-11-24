@@ -10,6 +10,25 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Write Clean AndroidManifest
+        run: |
+          mkdir -p app/src/main
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://android.com">
+              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-feature android:name="android.software.leanback" android:required="true" />
+              <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+              <application android:label="JioTV Native" android:usesCleartextTraffic="true">
+                  <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="landscape">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
@@ -21,4 +40,5 @@ jobs:
         with:
           name: JioTV-TV-APK
           path: app/build/outputs/apk/debug/app-debug.apk
+
 
