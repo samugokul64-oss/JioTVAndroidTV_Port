@@ -10,12 +10,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Write Clean AndroidManifest
+      - name: Generate Valid AndroidManifest
         run: |
-          mkdir -p app/src/main
-          cat << 'EOF' > app/src/main/AndroidManifest.xml
-          <?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="http://android.com">
+          python3 -c '
+          ns = "http://" + "://android.com"
+          xml = f"""<?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="{ns}">
               <uses-permission android:name="android.permission.INTERNET" />
               <uses-feature android:name="android.software.leanback" android:required="true" />
               <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
@@ -27,8 +27,11 @@ jobs:
                       </intent-filter>
                   </activity>
               </application>
-          </manifest>
-          EOF
+          </manifest>"""
+          import os
+          os.makedirs("app/src/main", exist_ok=True)
+          open("app/src/main/AndroidManifest.xml", "w").write(xml)
+          '
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
@@ -40,5 +43,3 @@ jobs:
         with:
           name: JioTV-TV-APK
           path: app/build/outputs/apk/debug/app-debug.apk
-
-
